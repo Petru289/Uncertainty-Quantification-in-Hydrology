@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from functions import c, dcdn
+from functions import c, dcdn, dcdq, dcdD, dcdLambda
 
 # Load the input parameters
 import parameters as par
@@ -26,20 +26,20 @@ def sensitivityAnalysis(parameter):
     elif parameter == 'q':
         q = xstep = np.linspace(0.15,0.5,100)
         xLabel = 'specific discharge [$m/d$]'
-        derivative = dcdn # has to be exchanged for the correct derivative
+        derivative = dcdq 
 
     elif parameter == 'D':
         D = xstep = np.linspace(0.1,0.7,100)
         xLabel = 'dispersion coefficient [$m^2/d$]'
-        derivative = dcdn # has to be exchanged for the correct derivative
+        derivative = dcdD 
 
     elif parameter == 'Lambda':
         Lambda = xstep = np.linspace(0,0.03,100)
         xLabel = 'decay rate [$1/d$]'
-        derivative = dcdn # has to be exchanged for the correct derivative
+        derivative = dcdLambda 
     
-    concentrations = np.zeros(shape = (len(x)*len(t), 100))
-    dconcentrations = np.zeros(shape = (len(x)*len(t), 100))
+    concentrations = np.zeros(shape = (len(x) * len(t), 100))
+    dconcentrations = np.zeros(shape = (len(x) * len(t), 100))
 
     # Prepare the figures
     fig1, axes1 = plt.subplots(nrows = len(x), ncols = len(t))
@@ -61,7 +61,7 @@ def sensitivityAnalysis(parameter):
             std =  np.round(np.std(concentrations[rownumber, :]), 2)
 
             # Clean overflowing skalars
-            # This is neede because for i = 2 and j = 0 we encountered an overflow exeption during the np.hist function call
+            # This is needed because for i = 2 and j = 0 we encountered an overflow exeption during the np.hist function call
             concentrations[rownumber,:] = [0 if x<1e-300 else x for x in concentrations[rownumber,:]]
             
             # Plot histogramm
