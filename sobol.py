@@ -79,7 +79,7 @@ for N in [1000, 10000, 100000]: #number of realizations
             ABD[:,1] = B[:,1]
             ABq[:,2] = B[:,2]
             ABLambda[:,3] = B[:,3]
-
+            
             #print(A)
             #print(ABn)
 
@@ -102,7 +102,7 @@ for N in [1000, 10000, 100000]: #number of realizations
             yBAq = c(distance, timestep, par.M, BAq[:,0], BAq[:,1], BAq[:,2], BAq[:,3])
             yBALambda = c(distance, timestep, par.M, BALambda[:,0], BALambda[:,1], BALambda[:,2], BALambda[:,3])
 
-            yC = c(distance, timestep, par.M, C[:,0], C[:,0], C[:,2], C[:,3])
+            yC = c(distance, timestep, par.M, C[:,0], C[:,1], C[:,2], C[:,3])
             
 
             #We need nicer notations
@@ -181,3 +181,4 @@ for N in [1000, 10000, 100000]: #number of realizations
 
 
 file.close()
+
