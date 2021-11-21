@@ -18,12 +18,12 @@ axisLabelFontSize = 10
 
 file = open('output2.txt', 'w')
 
-#for N in [1000, 10000, 100000]: #number of realizations
-N = 10000
+#for N in [1000, 10000, 100000]: #sample size
+N = 100000
 
-print("Number of realizations =", N)
+print("Sample size =", N)
 print()
-file.write("Number of realizations = ")
+file.write("Sample size = ")
 file.write(str(N))
 file.write('\n')
 file.write('\n')
@@ -31,7 +31,6 @@ file.write('\n')
 
 for distIndex, distance in enumerate(x):
     for timeIndex, timestep in enumerate(t):
-        
         # Get Matrix A 
         n = cp.Uniform(par.nRange[0], par.nRange[1])
         D = cp.Uniform(par.DRange[0], par.DRange[1])
@@ -153,29 +152,27 @@ for distIndex, distance in enumerate(x):
         
         #https://matplotlib.org/stable/gallery/lines_bars_and_markers/barchart.html
 
-        labels = [n, D, q, Lambda]
+        labels = ['n', 'D', 'q', 'Lambda']
         sobol = [Sn, SD, Sq, SLambda]
         total_sobol = [STn, STD, STq, STLambda]
         l = np.arange(len(labels))
             
 
         if np.isnan(Sn) == True:
-            rects1 = axes[distIndex, timeIndex].bar(l - width / 2, [0, 0, 0, 0], width, label = 'First order')
-            rects2 = axes[distIndex, timeIndex].bar(l - width / 2, [0, 0, 0, 0], width, label = 'Total')
+            axes[distIndex, timeIndex].bar(l - width / 2, [0, 0, 0, 0], width, label = 'First order')
+            axes[distIndex, timeIndex].bar(l + width / 2, [0, 0, 0, 0], width, label = 'Total')
             axes[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = axisLabelFontSize)
-            #axes[distIndex, timeIndex].set_xticks(l, labels)
+            axes[distIndex, timeIndex].set_xticks(l)
+            axes[distIndex, timeIndex].set_xticklabels(labels)
             axes[distIndex, timeIndex].legend()
-            axes[distIndex, timeIndex].bar_label(rects1, padding = 3)
-            axes[distIndex, timeIndex].bar_label(rects2, padding = 3)
         else:
-            rects1 = axes[distIndex, timeIndex].bar(l - width / 2, sobol, width, label = 'First order')
-            rects2 = axes[distIndex, timeIndex].bar(l - width / 2, total_sobol, width, label = 'Total')
+            axes[distIndex, timeIndex].bar(l - width / 2, sobol, width, label = 'First order')
+            axes[distIndex, timeIndex].bar(l + width / 2, total_sobol, width, label = 'Total')
             axes[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = axisLabelFontSize)
-            #axes[distIndex, timeIndex].set_xticks(l, labels)
+            axes[distIndex, timeIndex].set_xticks(l)
+            axes[distIndex, timeIndex].set_xticklabels(labels)
             axes[distIndex, timeIndex].legend()
-            axes[distIndex, timeIndex].bar_label(rects1, padding = 3)
-            axes[distIndex, timeIndex].bar_label(rects2, padding = 3)
-
+          
 
         fig.tight_layout()
 
