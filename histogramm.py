@@ -12,7 +12,7 @@ def histogramm():
     plt.rc('ytick', labelsize=8)
 
     # Initialize variables
-    concentrations = np.zeros(shape = (len(par.x) * len(par.t), 100))
+    concentrations = np.zeros(shape = (len(par.x) * len(par.t), 1000))
 
     # Prepare the figure
     fig, axes = plt.subplots(nrows = len(par.x), ncols = len(par.t))
@@ -31,7 +31,7 @@ def histogramm():
             q = cp.Uniform(par.qRange[0], par.qRange[1])
             Lambda = cp.Uniform(par.LambdaRange[0], par.LambdaRange[1])
             jointdist = cp.J(n, D, q, Lambda)
-            jointsample = jointdist.sample(size = 100)
+            jointsample = jointdist.sample(size = 1000)
 
             # Calculate concentration
             concentrations[concentrationIndex, :] = c(distance, timestep, par.M, jointsample[0,:], jointsample[1,:], jointsample[2,:], jointsample[3,:])
@@ -41,7 +41,7 @@ def histogramm():
             std =  np.round(np.std(concentrations[concentrationIndex, :]), 2)
             
             # Plot subplots
-            axes[distIndex, timeIndex].hist(concentrations[concentrationIndex,:], 30)
+            axes[distIndex, timeIndex].hist(concentrations[concentrationIndex,:], 20) #20 bars optimal, but with sample size = 1000
             axes[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = 8)
             axes[distIndex, timeIndex].set_xlabel('concentration [$kg/m^3$]', fontsize = 8)
             axes[distIndex, timeIndex].set_ylabel('Frequency', fontsize = 8)

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import chaospy as cp
 from functions import c, dcdn, dcdq, dcdD, dcdLambda
 
 # Load the input parameters
@@ -19,27 +20,31 @@ def sensitivityAnalysis(parameter):
 
     # Overwrite the parameter we want to change
     if parameter == 'n':
-        n = xstep = np.linspace(0.3,0.5,100)
+        unif = cp.Uniform(par.nRange[0], par.nRange[1]) 
+        n = xstep = unif.sample(size = 1000) #sample size 1000 for a better picture of the distribution
         xLabel = 'porosity [-]'
         derivative = dcdn
 
     elif parameter == 'q':
-        q = xstep = np.linspace(0.15,0.5,100)
+        unif = cp.Uniform(par.qRange[0], par.qRange[1]) 
+        q = xstep = unif.sample(size = 1000)
         xLabel = 'specific discharge [$m/d$]'
         derivative = dcdq 
 
     elif parameter == 'D':
-        D = xstep = np.linspace(0.1,0.7,100)
+        unif = cp.Uniform(par.DRange[0], par.DRange[1]) 
+        D = xstep = unif.sample(size = 1000)
         xLabel = 'dispersion coefficient [$m^2/d$]'
         derivative = dcdD 
 
     elif parameter == 'Lambda':
-        Lambda = xstep = np.linspace(0,0.03,100)
+        unif = cp.Uniform(par.LambdaRange[0], par.LambdaRange[1]) 
+        Lambda = xstep = unif.sample(size = 1000)
         xLabel = 'decay rate [$1/d$]'
         derivative = dcdLambda 
     
-    concentrations = np.zeros(shape = (len(x) * len(t), 100))
-    dconcentrations = np.zeros(shape = (len(x) * len(t), 100))
+    concentrations = np.zeros(shape = (len(x) * len(t), 1000))
+    dconcentrations = np.zeros(shape = (len(x) * len(t), 1000))
 
     # Prepare the figures
     fig1, axes1 = plt.subplots(nrows = len(x), ncols = len(t))
@@ -53,7 +58,7 @@ def sensitivityAnalysis(parameter):
     for distIndex, distance in enumerate(x):
         for timeIndex, timestep in enumerate(t):
 
-            rownumber = 3* distIndex + timeIndex
+            rownumber = 3 * distIndex + timeIndex
             
             concentrations[rownumber, :] = c(distance, timestep, M, n, D, q, Lambda)
             dconcentrations[rownumber, :] = derivative(distance, timestep, M, n, D, q, Lambda)
@@ -65,7 +70,7 @@ def sensitivityAnalysis(parameter):
             concentrations[rownumber,:] = [0 if x<1e-300 else x for x in concentrations[rownumber,:]]
             
             # Plot histogramm
-            axes1[distIndex, timeIndex].hist(concentrations[rownumber,:])
+            axes1[distIndex, timeIndex].hist(concentrations[rownumber,:], 20) #20 -> more bars (but with samplesize = 1000), better picture of distribution
             axes1[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = axisLabelFontSize)
             axes1[distIndex, timeIndex].set_xlabel('concentration [$kg/m^3$], mean = {}, sd = {}'.format(mean, std), fontsize = axisLabelFontSize)
 
