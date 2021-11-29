@@ -1,8 +1,10 @@
 # Uq In Hydrology
 
-- In sobol2.py the barplots are fixed; run the code several times so that you don't get negative values... so not working perfectly yet
+- Algorithms for grid search, Monte Carlo and Nelder Mead uploaded now. See the comments for some explanations.
 
-- sobol2.py contains the algorithm from the book, is slightly different. I have to fix plots, an update should come. Better results, but still not perfect...
+- In sobol2.py run the code several times so that you don't get negative values... 
+
+- sobol2.py contains the algorithm from the book, is slightly different.
 
 - If you want to edit input parameters, edit the parameters.py file.
 - To get the histogramm as well as the sensitivity analysis run main.py
