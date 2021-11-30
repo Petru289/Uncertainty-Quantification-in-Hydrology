@@ -56,11 +56,10 @@ def montecarlo(N, method):  #N = sample size
     # axes.scatter(jointsample[0,:], jointsample[1,:])
     # plt.show()
 
-    print(np.array([n_opt, D_opt, q_opt, Lambda_opt]))
+    return [np.array([n_opt, D_opt, q_opt, Lambda_opt]), min]
 
 
 
 
 if __name__ == "__main__":
-    opt_par = montecarlo(30, 'least squares')
-    print(opt_par)
+    opt_par = montecarlo(40, 'least squares')

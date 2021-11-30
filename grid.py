@@ -35,7 +35,6 @@ def grid(N, method): #N = number of discretization points on each axis
 
 
     min = np.min(error)
-    print(min)
     indices = np.where(error == min)
     #VERY CAREFUL HERE, MESHGRID TRICKS YOU. INDICES ARE CORRECT NOW.
     n_opt = n[int(indices[1])]
@@ -43,14 +42,13 @@ def grid(N, method): #N = number of discretization points on each axis
     q_opt = q[int(indices[2])]
     Lambda_opt = Lambda[int(indices[3])]
 
-    print(np.array([n_opt, D_opt, q_opt, Lambda_opt]))
+    return [np.array([n_opt, D_opt, q_opt, Lambda_opt]), min]
 
 
 
 
 if __name__ == "__main__":
     opt_par = grid(30, 'least squares')
-    print(opt_par)
 
 
 

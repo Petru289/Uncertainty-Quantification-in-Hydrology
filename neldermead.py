@@ -60,9 +60,12 @@ def neldermead(method):
         local_min_values[i] = results.fun
         local_minimas[i] = np.array(results.x)
     
-    index = np.where(local_min_values == np.min(local_min_values))
+    min = np.min(local_min_values)
+    index = np.where(local_min_values == min)
     opt_par = np.reshape(local_minimas[index],(4,)) #Reshape, so that we get only 1 dimension
-    print(opt_par) 
+    
+    return [opt_par, min]
+
 
 
 
