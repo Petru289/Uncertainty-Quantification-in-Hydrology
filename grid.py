@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import parameters as par
 from functions import c
+import obj
+import matplotlib.pyplot as plt
 
 
 def grid(N, method): #N = number of discretization points on each axis
@@ -15,40 +17,53 @@ def grid(N, method): #N = number of discretization points on each axis
     D = np.linspace(par.DRange[0], par.DRange[1], N)
     q = np.linspace(par.qRange[0], par.qRange[1], N)
     Lambda = np.linspace(par.LambdaRange[0], par.LambdaRange[1], N)
-    X, Y, Z, W =  np.meshgrid(n, D, q, Lambda)
-    error = 0
+    X, Y, Z, W = np.meshgrid(n, D, q, Lambda)
 
     if method == 'least squares':
-        for i in range(obs.shape[0]):
-            error += (np.full((N, N, N, N), obs[i,0]) - c(5, t[i], par.M, X, Y, Z, W)) ** 2 + \
-                     (np.full((N, N, N, N), obs[i,1]) - c(50, t[i], par.M, X, Y, Z, W)) ** 2
+        error = obj.ls(X, Y, Z, W)
 
     if method == 'least log-squares':
-        for i in range(obs.shape[0]):
-            error += (np.log(np.full((N, N, N, N), obs[i,0])) - np.log(c(5, t[i], par.M, X, Y, Z, W))) ** 2 + \
-                     (np.log(np.full((N, N, N, N), obs[i,1])) - np.log(c(50, t[i], par.M, X, Y, Z, W))) ** 2
+        error = obj.llogs(X, Y, Z, W)
 
     if method == 'relative error':
-        for i in range(obs.shape[0]):
-            error += ((np.full((N, N, N, N), obs[i,0]) - c(5, t[i], par.M, X, Y, Z, W)) / np.full((N, N, N, N), obs[i,0])) ** 2 + \
-                     ((np.full((N, N, N, N), obs[i,1]) - c(50, t[i], par.M, X, Y, Z, W)) / np.full((N, N, N, N), obs[i,1])) ** 2
-
+        error = obj.relerr(X, Y, Z, W)
 
     min = np.min(error)
     indices = np.where(error == min)
     #VERY CAREFUL HERE, MESHGRID TRICKS YOU. INDICES ARE CORRECT NOW.
-    n_opt = n[int(indices[1])]
-    D_opt = D[int(indices[0])]
-    q_opt = q[int(indices[2])]
-    Lambda_opt = Lambda[int(indices[3])]
+    i1, i2, i3, i4 = int(indices[1]), int(indices[0]), int(indices[2]), int(indices[3])
+    n_opt = n[i1]
+    D_opt = D[i2]
+    q_opt = q[i3]
+    Lambda_opt = Lambda[i4]
+
+    #Plotting projections of the objective functions
+
+    if method == 'least squares':
+        f = obj.ls(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
+
+    if method == 'least log-squares':
+        f = obj.llogs(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
+
+    if method == 'relative error':
+        f = obj.llogs(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
+
+    levels = [0.0, 0.3, 4.0, 14.0, 38.0, 60.0, 200, 400, 800, 2000, 4000]
+    cpl = plt.contour(X[:, :, i3, i4], Y[:, :, i3, i4], f, levels, colors='black', linestyles='dashed', linewidths=1)
+    plt.clabel(cpl, inline=1, fontsize=10)
+    cpl = plt.contourf(X[:, :, i3, i4], Y[:, :, i3, i4], f, levels, \
+                      colors = ['darkgreen', 'green', 'forestgreen', 'seagreen', 'mediumseagreen', \
+                                'springgreen', 'aquamarine', 'turquoise', 'paleturquoise', 'lightcyan', 'lightblue'])
+    plt.xlabel('n')
+    plt.ylabel('D')
+    plt.show()
+
 
     return [np.array([n_opt, D_opt, q_opt, Lambda_opt]), min]
 
 
-
-
 if __name__ == "__main__":
     opt_par = grid(30, 'least squares')
-
+    print(opt_par)
 
 

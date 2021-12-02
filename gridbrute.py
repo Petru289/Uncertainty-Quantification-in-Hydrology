@@ -3,6 +3,7 @@ import pandas as pd
 from scipy.optimize import optimize
 from functions import c
 import parameters as par
+import obj
 
 
 def gridbrute(method):
@@ -16,32 +17,17 @@ def gridbrute(method):
 
     if method == 'least squares':
         def f(param):
-            error = 0
-            for i in range(obs.shape[0]):
-                error += (obs[i,0] - c(5, t[i], par.M, param[0], param[1], param[2], param[3])) ** 2 + \
-                            (obs[i,1] - c(50, t[i], par.M, param[0], param[1], param[2], param[3])) ** 2
-            return error
-        results = optimize.brute(f, ranges = bnds, full_output = 1)
+            return obj.ls(param[0], param[1], param[2], param[3])
         
-    
     if method == 'least log-squares':
         def f(param):
-            error = 0
-            for i in range(obs.shape[0]):
-                error += (np.log(obs[i,0]) - np.log(c(5, t[i], par.M, param[0], param[1], param[2], param[3]))) ** 2 + \
-                            (np.log(obs[i,1]) - np.log(c(50, t[i], par.M, param[0], param[1], param[2], param[3]))) ** 2
-            return error
-        results = optimize.brute(f, ranges = bnds, full_output = 1)
-
+            return obj.llogs(param[0], param[1], param[2], param[3])
 
     if method == 'relative error':
         def f(param):
-            error = 0
-            for i in range(obs.shape[0]):
-                error += ((obs[i,0] - c(5, t[i], par.M, param[0], param[1], param[2], param[3])) / obs[i,0]) ** 2 + \
-                            ((obs[i,1] - c(50, t[i], par.M, param[0], param[1], param[2], param[3])) / obs[i,1]) ** 2
-            return error
-        results = optimize.brute(f, ranges = bnds, full_output = 1)
+            return obj.relerr(param[0], param[1], param[2], param[3])
+
+    results = optimize.brute(f, ranges = bnds, full_output = 1)
         
     return [results[0], results[1]]
 

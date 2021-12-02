@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from grid import grid
 from montecarlo import montecarlo
 from neldermead import neldermead
