@@ -1,57 +1,45 @@
 least squares
 
-Grid Search:
+Grid Search
 [n D q Lambda] =[0.33448276 0.67931034 0.48793103 0.01655172]
-Minimum value of the objective function: 
+Minimum value of the objective function:
 0.038588788055062564
-Monte Carlo:
-[n D q Lambda] =[0.33940448 0.66326951 0.49570188 0.01691255]
-Minimum value of the objective function: 
-0.04753856241329102
-Nelder Mead:
-[n D q Lambda] =[0.3        0.68332347 0.43788571 0.01630067]
-Minimum value of the objective function: 
-0.033986538743256495
-Built-in Grid Search:
-[n D q Lambda] =[0.3431073  0.68326773 0.50080687 0.01630202]
-Minimum value of the objective function: 
-0.0339865660877502
+Monte Carlo
+[n D q Lambda] =[0.31105779 0.6739938  0.45451851 0.01668346]
+Minimum value of the objective function:
+0.042070267522827776
+Nelder Mead
+[n D q Lambda] =[0.3        0.68327834 0.4378876  0.01630146]
+Minimum value of the objective function:
+0.03398653276869668
 
 least log-squares
 
-Grid Search:
-[n D q Lambda] =[0.34137931 0.65862069 0.5        0.0237931 ]
-Minimum value of the objective function: 
-2.600883014874644
-Monte Carlo:
-[n D q Lambda] =[0.31514591 0.66126355 0.46134968 0.02627812]
-Minimum value of the objective function: 
-4.5564228896710235
-Nelder Mead:
-[n D q Lambda] =[0.33280576 0.65039811 0.49093466 0.01444799]
-Minimum value of the objective function: 
-0.07636360004623102
-Built-in Grid Search:
-[n D q Lambda] =[0.33961135 0.65038693 0.50097564 0.01445258]
-Minimum value of the objective function: 
-0.07636117036470474
+Grid Search
+[n D q Lambda] =[0.30689655 0.67931034 0.45172414 0.01655172]
+Minimum value of the objective function:
+0.0024157912984268145
+Monte Carlo
+[n D q Lambda] =[0.32543118 0.68196271 0.47829822 0.01672032]
+Minimum value of the objective function:
+0.002613361027631452
+Nelder Mead
+[n D q Lambda] =[0.3        0.67553802 0.44159604 0.01677363]
+Minimum value of the objective function:
+0.0022784340359232806
 
 relative error
 
-Grid Search:
+Grid Search
 [n D q Lambda] =[0.30689655 0.63793103 0.45172414 0.01034483]
-Minimum value of the objective function: 
+Minimum value of the objective function:
 1.6861309336793777
-Monte Carlo:
-[n D q Lambda] =[0.30682055 0.64282275 0.45313201 0.01072417]
-Minimum value of the objective function: 
-1.0537647023076653
-Nelder Mead:
-[n D q Lambda] =[0.32501244 0.65039582 0.47943005 0.0148289 ]
-Minimum value of the objective function: 
-0.07765414280910442
-Built-in Grid Search:
-[n D q Lambda] =[0.31601201 0.6504006  0.46614908 0.01486479]
-Minimum value of the objective function: 
-0.07764697136400699
+Monte Carlo
+[n D q Lambda] =[0.33754653 0.63994256 0.49770205 0.0107584 ]
+Minimum value of the objective function:
+1.449694872775024
+Nelder Mead
+[n D q Lambda] =[0.30064909 0.65039798 0.44347537 0.01485764]
+Minimum value of the objective function:
+0.07765685534082638
 

@@ -7,14 +7,15 @@ import matplotlib.pyplot as plt
 import obj
 
 
-def montecarlo(N, method):  #N = sample size
+def montecarlo(N, method, plot = False):  #N = sample size
  
     t = np.array([5, 10, 15, 20, 25, 30, 35])
 
     #run 'pip install openpyxl' before executing the following line
-    file = pd.read_excel(r'C:\Users\Gheorghe Pascu\OneDrive - tum.de\WiSe 21-22\Uncertainty Quantification in Hydrology\measurements.xlsx')
+    file = pd.read_excel('./measurements.xlsx')
     obs = file.to_numpy()
 
+    # Sample
     n = cp.Uniform(par.nRange[0], par.nRange[1])
     D = cp.Uniform(par.DRange[0], par.DRange[1])
     q = cp.Uniform(par.qRange[0], par.qRange[1])
@@ -25,10 +26,12 @@ def montecarlo(N, method):  #N = sample size
     y = np.sort(jointsample[1,:])
     z = np.sort(jointsample[2,:])
     w = np.sort(jointsample[3,:])
+    
     #This method is maybe inefficient because of sorting the arrays
     X, Y, Z, W = np.meshgrid(x, y, z, w)
     error = 0
 
+    # Calculate the error depending on the method
     if method == 'least squares':
         error = obj.ls(X, Y, Z, W)
 
@@ -49,25 +52,25 @@ def montecarlo(N, method):  #N = sample size
     Lambda_opt = w[i4]
 
     #Plotting projections of the objective functions
+    if plot:
+        if method == 'least squares':
+            f = obj.ls(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
 
-    if method == 'least squares':
-        f = obj.ls(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
+        if method == 'least log-squares':
+            f = obj.llogs(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
 
-    if method == 'least log-squares':
-        f = obj.llogs(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
+        if method == 'relative error':
+            f = obj.llogs(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
 
-    if method == 'relative error':
-        f = obj.llogs(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
-
-    levels = [0.0, 0.3, 4.0, 14.0, 38.0, 60.0, 200, 400, 800, 2000, 4000]
-    cpl = plt.contour(X[:, :, i3, i4], Y[:, :, i3, i4], f, levels, colors='black', linestyles='dashed', linewidths=1)
-    plt.clabel(cpl, inline=1, fontsize=10)
-    cpl = plt.contourf(X[:, :, i3, i4], Y[:, :, i3, i4], f, levels, \
-                      colors = ['darkgreen', 'green', 'forestgreen', 'seagreen', 'mediumseagreen', \
-                                'springgreen', 'aquamarine', 'turquoise', 'paleturquoise', 'lightcyan', 'lightblue'])
-    plt.xlabel('n')
-    plt.ylabel('D')
-    plt.show()
+        levels = [0.0, 0.3, 4.0, 14.0, 38.0, 60.0, 200, 400, 800, 2000, 4000]
+        cpl = plt.contour(X[:, :, i3, i4], Y[:, :, i3, i4], f, levels, colors='black', linestyles='dashed', linewidths=1)
+        plt.clabel(cpl, inline=1, fontsize=10)
+        cpl = plt.contourf(X[:, :, i3, i4], Y[:, :, i3, i4], f, levels, \
+                        colors = ['darkgreen', 'green', 'forestgreen', 'seagreen', 'mediumseagreen', \
+                                    'springgreen', 'aquamarine', 'turquoise', 'paleturquoise', 'lightcyan', 'lightblue'])
+        plt.xlabel('n')
+        plt.ylabel('D')
+        plt.show()
 
     return [np.array([n_opt, D_opt, q_opt, Lambda_opt]), min]
 

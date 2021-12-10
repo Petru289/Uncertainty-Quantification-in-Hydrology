@@ -9,7 +9,7 @@ import obj
 def gridbrute(method):
 
     #run 'pip install openpyxl' before executing the following line
-    file = pd.read_excel(r'C:\Users\Gheorghe Pascu\OneDrive - tum.de\WiSe 21-22\Uncertainty Quantification in Hydrology\measurements.xlsx')
+    file = pd.read_excel('./measurements.xlsx')
     obs = file.to_numpy()
     t = np.array([5, 10, 15, 20, 25, 30, 35])
 
