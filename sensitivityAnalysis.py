@@ -14,6 +14,11 @@ def sensitivityAnalysis(parameter):
     D = np.mean(par.DRange)
     q = np.mean(par.qRange)
     Lambda = np.mean(par.LambdaRange)
+    #D - max, to illustrate the interaction between parameters - see report
+    # n = np.mean(par.nRange)
+    # D = np.max(par.DRange)
+    # q = np.mean(par.qRange)
+    # Lambda = np.mean(par.LambdaRange)
     x = par.x
     t = par.t
     M = par.M
@@ -73,7 +78,7 @@ def sensitivityAnalysis(parameter):
             axes1[distIndex, timeIndex].hist(concentrations[rownumber,:], 20) #20 -> more bars (but with samplesize = 1000), better picture of distribution
             axes1[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = axisLabelFontSize)
             axes1[distIndex, timeIndex].set_xlabel('concentration [$kg/m^3$], mean = {}, sd = {}'.format(mean, std), fontsize = axisLabelFontSize)
-
+            print('mean = ', mean, 'sd = ', std)
             # Plot concentration
             axes2[distIndex, timeIndex].scatter(xstep, concentrations[rownumber,:], s = 5, c = "firebrick")
             axes2[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = axisLabelFontSize)
