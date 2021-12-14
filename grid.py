@@ -4,9 +4,7 @@ import parameters as par
 from functions import c
 import obj
 import matplotlib.pyplot as plt
-
-# For testing
-import time
+from matplotlib.colors import LogNorm
 
 
 def grid(N, method, plot=False): #N = number of discretization points on each axis
@@ -37,32 +35,48 @@ def grid(N, method, plot=False): #N = number of discretization points on each ax
     q_opt = q[i3]
     Lambda_opt = Lambda[i4]
 
-    # Only plot if it defined in the function input
+    #Plotting projections of the objective functions
     if plot:
+
+        # Get X and Y values. If you want to plot different parameters change them here.
+        # And don't forget to adjust the labels for the plot as well.
+        xValues = X[:, :, i3, i4]
+        yValues = Y[:, :, i3, i4]
+        zValues = Z[:, :, i3, i4]
+        wValues = W[:, :, i3, i4]
+        
+        # Evalueate the objective function
+        f = obj.getError(xValues, yValues, zValues, wValues, method)
+
+        # Define meaningful levels. This highly depends on the objective function.
         if method == 'least squares':
-            f = obj.ls(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
-
+            vmin = 0.02
+            levels = np.linspace(vmin, f.max()**(1/6), 10) ** 6
+        
         if method == 'least log-squares':
-            f = obj.llogs(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
-
+            vmin = 0.02
+            levels = np.linspace(vmin, f.max()**(1/6), 10) ** 6
+        
         if method == 'relative error':
-            f = obj.llogs(X[:, :, i3, i4], Y[:, :, i3, i4], Z[:, :, i3, i4], W[:, :, i3, i4])
+            vmin = f.min()
+            levels = np.linspace(vmin, f.max(), 10)
+            levels = np.linspace(vmin, f.max()**(1/10), 10) ** 10
 
-        levels = [0.0, 0.3, 4.0, 14.0, 38.0, 60.0, 200, 400, 800, 2000, 4000]
-        cpl = plt.contour(X[:, :, i3, i4], Y[:, :, i3, i4], f, levels, colors='black', linestyles='dashed', linewidths=1)
+        #levels = [0.02, 0.3, 4.0, 14.0, 38.0, 60.0, 200, 400, 800, 2000, 4000]
+
+        cpl = plt.contour(xValues, yValues, f, levels, colors='black', linestyles='dashed', linewidths=1)
         plt.clabel(cpl, inline=1, fontsize=10)
-        cpl = plt.contourf(X[:, :, i3, i4], Y[:, :, i3, i4], f, levels, \
-                        colors = ['darkgreen', 'green', 'forestgreen', 'seagreen', 'mediumseagreen', \
-                                    'springgreen', 'aquamarine', 'turquoise', 'paleturquoise', 'lightcyan', 'lightblue'])
-        plt.xlabel('n')
-        plt.ylabel('D')
+        cpl = plt.contourf(xValues, yValues, f, levels, cmap='YlGnBu_r', vmin=vmin/2, vmax=f.max(), norm=LogNorm())
+        plt.xlabel('Porosity')
+        plt.ylabel('Dispersion Coefficient')
+        plt.title('Value of the objective function')
         plt.show()
 
     return [np.array([n_opt, D_opt, q_opt, Lambda_opt]), minError]
 
 
 if __name__ == "__main__":
-    opt_par = grid(30, 'least squares')
+    opt_par = grid(30, 'least squares', plot=True)
     print(opt_par)
 
 

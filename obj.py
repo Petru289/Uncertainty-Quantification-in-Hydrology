@@ -3,11 +3,13 @@ import pandas as pd
 import parameters as par
 from functions import c
 
+# Different objective functions for the calibration process
 
 t = np.array([5, 10, 15, 20, 25, 30, 35])
 file = pd.read_excel('./measurements.xlsx')
 obs = file.to_numpy()
 
+# Objective function definition
 def ls(x, y, z, w):
     error = 0
     for i in range(obs.shape[0]):
@@ -28,4 +30,14 @@ def relerr(x, y, z, w):
         error += ((obs[i,0] - c(5, t[i], par.M, x, y, z, w)) / obs[i,0]) ** 2 + \
                  ((obs[i,1] - c(50, t[i], par.M, x, y, z, w)) / obs[i,1]) ** 2
     return error
+
+
+def getError(x, y, z, w, objectiveFunction = 'least squares'):
+    
+    if objectiveFunction == 'least squares':
+        return ls(x,y,z,w)
+    elif objectiveFunction == 'least log-squares':
+        return llogs(x,y,z,w)
+    elif objectiveFunction == 'relative error':
+        return relerr(x,y,z,w)
     
