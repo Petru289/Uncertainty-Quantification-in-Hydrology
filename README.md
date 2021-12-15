@@ -1,5 +1,7 @@
 # Uq In Hydrology
 
+- See the spotpy documentation: https://spotpy.readthedocs.io/en/latest/
+
 - Algorithms for grid search, Monte Carlo and Nelder Mead uploaded now. See the comments for some explanations.
 
 - In sobol2.py run the code several times so that you don't get negative values... 
