@@ -26,13 +26,13 @@ def dream_run():
     nCr = 3 #default is 3
     runs_after_convergence = 100 #default is 100
 
-    sampler = spotpy.algorithms.dream(spot_setup, parallel=parallel, dbname='RosenDREAM', dbformat=dbformat, db_precision = np.float16, save_sim = True, sim_timeout=timeout)
-    sampler.sample(repetitions = rep,  nChains = nChains,convergence_limit = convergence_limit, runs_after_convergence = runs_after_convergence)
-    results.append(sampler.getdata())
+    sampler = spotpy.algorithms.dream(spot_setup, parallel=parallel, dbname='HydrologyDREAM', dbformat=dbformat, db_precision = np.float16, save_sim = True, sim_timeout=timeout)
+    r_hat = sampler.sample(repetitions = rep,  nChains = nChains, convergence_limit = convergence_limit, runs_after_convergence = runs_after_convergence)
+    
 
-    return results
+    return r_hat
     # dbname: str
-#    * Name of the database where parameter, objectivefunction value and simulation results will be saved.
+    #* Name of the database where parameter, objectivefunction value and simulation results will be saved.
 
     #   dbformat: str
     #   * ram: fast suited for short sampling time. no file will be created and results are saved in an array.
