@@ -3,6 +3,7 @@ from grid import grid
 from montecarlo import montecarlo
 from neldermead import neldermead
 import matplotlib.pyplot as plt
+import csv
 
 #For the loss function you want to use, choose between 'least squares', 'least log-squares', 'relative error'
 #Additionaly, as first argument, 
@@ -23,14 +24,22 @@ fig, axes = plt.subplots(nrows = 2, ncols = 2)
 optimals = np.zeros((4,len(methodLabels),len(objectives)))
 
 file = open('optimals.txt', 'w')
+csvFile = open('optimals.csv', 'w')
+writer = csv.writer(csvFile)
+
 
 # Calculate optimal values with different algorithms and objective functions
 for j, objective in enumerate(objectives):
 
     file.write(objective + '\n\n')
+    writer.writerow([objective])
+    writer.writerow(['method', 'n', 'D', 'q', 'Lambda'])
+
     res = [grid(30, objective), montecarlo(50, objective), neldermead(objective)]
 
     for i, method in enumerate(['Grid Search', 'Monte Carlo', 'Nelder Mead']):
+
+        writer.writerow([method] + res[i][0].tolist())
         
         string = method + '\n[n D q Lambda] =' + str(res[i][0])
         string += '\nMinimum value of the objective function:\n' + str(res[i][1]) + '\n'
@@ -44,6 +53,7 @@ for j, objective in enumerate(objectives):
     file.write('\n')
 
 file.close()
+csvFile.close()
 
 # Create bar plots  
 for index, ax in enumerate(fig.axes):  
@@ -60,6 +70,7 @@ for index, ax in enumerate(fig.axes):
     ax.bar_label(bar2, padding=3, fmt='%.3f')
     ax.bar_label(bar3, padding=3, fmt='%.3f')
 
+# Set limits for the y-axis to make place for the legend.
 axes[0,0].set_ylim([0, 0.6])
 axes[0,1].set_ylim([0, 1.1])
 axes[1,0].set_ylim([0, 0.75])
