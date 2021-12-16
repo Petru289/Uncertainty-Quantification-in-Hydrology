@@ -1,5 +1,7 @@
 # Uq In Hydrology
 
+- For assignment 4, run dream_results.
+
 - See the spotpy documentation: https://spotpy.readthedocs.io/en/latest/
 
 - Algorithms for grid search, Monte Carlo and Nelder Mead uploaded now. See the comments for some explanations.
