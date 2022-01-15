@@ -1,5 +1,9 @@
 # Uq In Hydrology
 
+- For assignment 4, run dream_results.
+
+- See the spotpy documentation: https://spotpy.readthedocs.io/en/latest/
+
 - Algorithms for grid search, Monte Carlo and Nelder Mead uploaded now. See the comments for some explanations.
 
 - In sobol2.py run the code several times so that you don't get negative values... 
@@ -9,3 +13,4 @@
 - If you want to edit input parameters, edit the parameters.py file.
 - To get the histogramm as well as the sensitivity analysis run main.py
 - If you just want either one of them run the specific file.
+

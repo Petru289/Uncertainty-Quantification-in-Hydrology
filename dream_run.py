@@ -19,7 +19,7 @@ def dream_run():
     spot_setup = spotpy_setup()
 
     #See spotpy.dream.py
-    rep = 1000
+    rep = 6000
     nChains = 5 #default is 5
     convergence_limit = 1.2 #default is 1.2
 
