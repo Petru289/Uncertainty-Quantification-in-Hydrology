@@ -7,6 +7,8 @@ from functions import c
 # Load the parameters
 import parameters as par
 
+labelFontSize = 10
+
 def histogramm():
     plt.rc('xtick', labelsize=8) 
     plt.rc('ytick', labelsize=8)
@@ -42,9 +44,9 @@ def histogramm():
             
             # Plot subplots
             axes[distIndex, timeIndex].hist(concentrations[concentrationIndex,:], 20) #20 bars optimal, but with sample size = 1000
-            axes[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = 8)
-            axes[distIndex, timeIndex].set_xlabel('concentration [$kg/m^3$]', fontsize = 8)
-            axes[distIndex, timeIndex].set_ylabel('Frequency', fontsize = 8)
+            axes[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = labelFontSize)
+            axes[distIndex, timeIndex].set_xlabel('concentration [$kg/m^3$]', fontsize = labelFontSize)
+            axes[distIndex, timeIndex].set_ylabel('Frequency', fontsize = labelFontSize)
             textstring = '\n'.join((
                 '$\mu=%.2f$' % float(mean),
                 '$\sigma=%.2f$' % std

@@ -22,7 +22,7 @@ spotpy.analyser.plot_fast_sensitivity(results_FAST, number_of_sensitiv_pars=4)
 r_hat = dream_run()
 results = spotpy.analyser.load_csv_results('HydrologyDREAM')
 fields = [word for word in results.dtype.names if word.startswith('sim')]
-print(results[fields])
+#print(results[fields])
 
 fig = plt.figure(figsize=(16,9))
 ax = plt.subplot(1,1,1)
