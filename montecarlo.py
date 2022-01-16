@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import obj
 
 
-def montecarlo(N, method, plot = False):  #N = sample size
+def montecarlo(N, method, plot = False, displayParameters=['n', 'D']):  #N = sample size
  
     t = np.array([5, 10, 15, 20, 25, 30, 35])
 
@@ -49,36 +49,43 @@ def montecarlo(N, method, plot = False):  #N = sample size
 
         # Get X and Y values. If you want to plot different parameters change them here.
         # And don't forget to adjust the labels for the plot as well.
-        xValues = X[:, :, i3, i4]
-        yValues = Y[:, :, i3, i4]
-        zValues = Z[:, :, i3, i4]
-        wValues = W[:, :, i3, i4]
+        xValues = X[i1, :, :, i4]
+        yValues = Y[:, i2, :, i4]
+        zValues = Z[:, i2, :, i4]
+        wValues = W[:, i2, :, i4]
+        Values = [xValues,yValues,zValues,wValues]
         
         # Evalueate the objective function
         f = obj.getError(xValues, yValues, zValues, wValues, method)
+        
+        # Define x and y axis parameters
+        print(f.min())
+        print(f.max())
 
-        # Define meaningful levels. This highly depends on the objective function.
+
+        # Define meaningful levels for the contour plot. This highly depends on the objective function.
         if method == 'least squares':
-            vmin = 0.02
-            levels = np.linspace(vmin, f.max()**(1/6), 10) ** 6
+            vmin = 1
+            vmax = f.max()
+            levels = np.linspace(vmin, f.max()**(1/6), 15) ** 6
         
         if method == 'least log-squares':
             vmin = 0.02
             levels = np.linspace(vmin, f.max()**(1/6), 10) ** 6
         
         if method == 'relative error':
-            vmin = f.min()
-            levels = np.linspace(vmin, f.max(), 10)
-            levels = np.linspace(vmin, f.max()**(1/10), 10) ** 10
+            vmin=0.001
+            vmax = 100000000
+            levels = [10,12,20,30,50,100,1000,100000,100000000,f.max()]
 
         #levels = [0.02, 0.3, 4.0, 14.0, 38.0, 60.0, 200, 400, 800, 2000, 4000]
 
-        cpl = plt.contour(xValues, yValues, f, levels, colors='black', linestyles='dashed', linewidths=1)
+        cpl = plt.contour(zValues, xValues, f, levels, colors='black', linestyles='dashed', linewidths=1)
         plt.clabel(cpl, inline=1, fontsize=10)
-        cpl = plt.contourf(xValues, yValues, f, levels, cmap='YlGnBu_r', vmin=vmin/2, vmax=f.max(), norm=LogNorm())
-        plt.xlabel('Porosity $[-]$')
-        plt.ylabel('Dispersion Coefficient $[m^2/d]$')
-        plt.title('Value of the objective function')
+        cpl = plt.contourf(zValues, xValues, f, levels, cmap='YlGnBu_r', vmin=vmin, vmax=vmax, norm=LogNorm())
+        plt.xlabel('Specific Discharge $[m/d]$')
+        plt.ylabel('Porosity $[-]$')
+        plt.title('Values of the objective function (least squares)')
         plt.show()
 
     return [np.array([n_opt, D_opt, q_opt, Lambda_opt]), min]
@@ -86,4 +93,4 @@ def montecarlo(N, method, plot = False):  #N = sample size
 
 
 if __name__ == "__main__":
-    opt_par = montecarlo(40, 'least log-squares', plot=True)
+    opt_par = montecarlo(40, 'least squares', plot=True)
