@@ -11,6 +11,7 @@ x = par.x
 t = par.t
 
 fig, axes = plt.subplots(nrows = len(x), ncols = len(t))
+fig.suptitle('Sobol indices', fontsize=20)
 width = 0.3
 axisLabelFontSize = 10
 #fig2, axes2 = plt.subplots(nrows = len(x), ncols = len(t))
@@ -19,7 +20,7 @@ axisLabelFontSize = 10
 file = open('output2.txt', 'w')
 
 #for N in [1000, 10000, 100000]: #sample size
-N = 100000
+N = 2**16
 
 print("Sample size =", N)
 print()
@@ -164,18 +165,19 @@ for distIndex, distance in enumerate(x):
             axes[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = axisLabelFontSize)
             axes[distIndex, timeIndex].set_xticks(l)
             axes[distIndex, timeIndex].set_xticklabels(labels)
-            axes[distIndex, timeIndex].legend()
+            axes[distIndex, timeIndex].set_ylim([0,1])
+            
         else:
             axes[distIndex, timeIndex].bar(l - width / 2, sobol, width, label = 'First order')
             axes[distIndex, timeIndex].bar(l + width / 2, total_sobol, width, label = 'Total')
             axes[distIndex, timeIndex].set_title('x = {}, t = {}'.format(distance, timestep), fontsize = axisLabelFontSize)
             axes[distIndex, timeIndex].set_xticks(l)
             axes[distIndex, timeIndex].set_xticklabels(labels)
-            axes[distIndex, timeIndex].legend()
+            axes[distIndex, timeIndex].set_ylim([0,1])
           
 
         fig.tight_layout()
-
+axes[0, 2].legend(loc=(0.70,1.1))
 plt.show()
 
 file.close()
