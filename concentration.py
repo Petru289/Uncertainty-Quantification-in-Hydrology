@@ -32,12 +32,38 @@ def readOptimalValues(filePath):
 
 optimalValues = readOptimalValues(filePath)
 
+# Get minimum and maximum of the parameter values
+maxValues = np.maximum(np.maximum(optimalValues[0],optimalValues[1]), optimalValues[2])
+minValues = np.minimum(np.minimum(optimalValues[0],optimalValues[1]), optimalValues[2])
+maxN = maxValues[0].max()
+minN = minValues[0].min()
+
+maxD = maxValues[1].max()
+minD = minValues[1].min()
+
+maxQ = maxValues[2].max()
+minQ = minValues[2].min()
+
+maxLambda = maxValues[3].max()
+minLambda = minValues[3].min()
+
+print('\nParameter range:')
+print('n: [' + str(minN) + ', ' + str(maxN) + ']; Difference: ' + str(maxN - minN))
+print('D: [' + str(minD) + ', ' + str(maxD) + ']; Difference: ' + str(maxD - minD))
+print('q: [' + str(minQ) + ', ' + str(maxQ) + ']; Difference: ' + str(maxQ - minQ))
+print('Lambda: [' + str(minLambda) + ', ' + str(maxLambda) + ']; Difference: ' + str(maxLambda - minLambda))
+
+
+
 time = np.arange(1,101)
 
 obj = ['Least Squares', 'Least Log-Squares', 'Relative Error']
 methods = ['Grid Search', 'Monte Carlo', 'Nelder-Mead']
 
+# Evaluate and plot the prediction for the concentration in 100 m.
 for j in range(3):
+    
+    # Prepare figure
     plt.figure(j+1)
     ax = plt.gca()
     ax.set_title('Prediction of the concentration at 100 m\nobjective function: ' + obj[j])
