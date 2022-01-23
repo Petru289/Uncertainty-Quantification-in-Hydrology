@@ -5,7 +5,7 @@ from dream_setup import spotpy_setup
 
 
 
-def dream_run():
+def dream_run(obsindices):
 
     results = []
     timeout = 10 #Given in Seconds
@@ -16,7 +16,7 @@ def dream_run():
 
     parallel = "seq" #sequential
     dbformat = "csv"
-    spot_setup = spotpy_setup()
+    spot_setup = spotpy_setup(obsindices)
 
     #See spotpy.dream.py
     rep = 6000
