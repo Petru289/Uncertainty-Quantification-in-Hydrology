@@ -23,8 +23,6 @@ class spotpy_setup(object):
                        ]
         self.obsindices1 = obsindices[obsindices <= 6]
         self.obsindices2 = obsindices[obsindices > 6]
-        # if pickobs == 'half random':
-        #     self.rand = np.random.choice(6, size = 7, replace = False)
     def parameters(self):
         return spotpy.parameter.generate(self.params)
     
