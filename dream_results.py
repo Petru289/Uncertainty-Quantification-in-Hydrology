@@ -7,13 +7,13 @@ from spotpy.analyser import plot_parameter_trace
 from spotpy.analyser import plot_posterior_parameter_histogram
 from functions import c
 
-#Set pickobs to be one of the following:
+# Set pickobs to be one of the following:
 # 1) 'all', if you want all the observations 
 # 2) 'half random', if you want only half uniform randomly chosen observation points 
-# 3) 'lower half', if you want only that half of the observations for which concentration is lowest
+# 3) 'lower half', if you want only that half of the observations for which concentration is lowest. Algo usually doesn't converge in this case.
 # 4) 'upper half', if you want only that half of the observations for which concentration is highest
    
-pickobs = 'upper half'
+pickobs = 'all'
 
 if pickobs == 'all':
     obsindices = np.arange(0, 14, 1)
@@ -37,14 +37,14 @@ r_hat = dream_run(obsindices)
 results = spotpy.analyser.load_csv_results('HydrologyDREAM')
 
 
-param = results[['parn', 'parD', 'parq', 'parLambda']]
-param = param[-100:]
+param_all = results[['parn', 'parD', 'parq', 'parLambda']]
+param = param_all[-100:] # Only the last 100 iterations of the chain
 param = np.column_stack((param['parn'], param['parD'], param['parq'], param['parLambda']))
 sim1 = []
 sim2 = []
 for t in time:
-    sim1.append(c(5, t, 200, param[:,0],param[:,1], param[:,2], param[:,3]))
-    sim2.append(c(50, t, 200, param[:,0],param[:,1], param[:,2], param[:,3]))
+    sim1.append(c(5, t, 200, param[:,0], param[:,1], param[:,2], param[:,3]))
+    sim2.append(c(50, t, 200, param[:,0], param[:,1], param[:,2], param[:,3]))
 
 fig, axes = plt.subplots(nrows = 2, ncols = 1)
 
@@ -167,9 +167,6 @@ fig.savefig('hydrology_parameters.png',dpi=300)
 #     axes[i].set_xlim(-0.05,6.05)   
 #     axes[i].legend()
 #     fig.savefig('python_hydrology.png', dpi = 300)   
-
-
-
 
 
 # SCRAP PAPER2
