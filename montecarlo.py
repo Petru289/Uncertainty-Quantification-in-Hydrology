@@ -49,11 +49,17 @@ def montecarlo(N, method, plot = False, displayParameters=['n', 'D']):  #N = sam
 
         # Get X and Y values. If you want to plot different parameters change them here.
         # And don't forget to adjust the labels for the plot as well.
+        
         xValues = X[i1, :, :, i4]
         yValues = Y[:, i2, :, i4]
         zValues = Z[:, i2, :, i4]
         wValues = W[:, i2, :, i4]
         Values = [xValues,yValues,zValues,wValues]
+
+        #xValues = X[:, :, i3, i4]
+        #yValues = Y[:, :, i3, i4]
+        #zValues = Z[:, :, i3, i4]
+        #wValues = W[:, :, i3, i4]
         
         # Evalueate the objective function
         f = obj.getError(xValues, yValues, zValues, wValues, method)
@@ -79,14 +85,22 @@ def montecarlo(N, method, plot = False, displayParameters=['n', 'D']):  #N = sam
             levels = [10,12,20,30,50,100,1000,100000,100000000,f.max()]
 
         #levels = [0.02, 0.3, 4.0, 14.0, 38.0, 60.0, 200, 400, 800, 2000, 4000]
-
-        cpl = plt.contour(zValues, xValues, f, levels, colors='black', linestyles='dashed', linewidths=1)
-        plt.clabel(cpl, inline=1, fontsize=10)
-        cpl = plt.contourf(zValues, xValues, f, levels, cmap='YlGnBu_r', vmin=vmin, vmax=vmax, norm=LogNorm())
-        plt.xlabel('Specific Discharge $[m/d]$')
-        plt.ylabel('Porosity $[-]$')
-        plt.title('Values of the objective function (least squares)')
-        plt.show()
+        lableFontSize=16
+        fig = plt.figure(1, figsize=(15, 9))
+        cpl = plt.contour(xValues, zValues, f, levels, colors='black', linestyles='dashed', linewidths=1)
+        plt.clabel(cpl, inline=1, fontsize=12)
+        cpl = plt.contourf(xValues, zValues, f, levels, cmap='YlGnBu_r', vmin=vmin, vmax=vmax, norm=LogNorm())
+        plt.xlabel('Porosity $[-]$', fontsize=lableFontSize)
+        plt.ylabel('Specific discharge $[m/d]$', fontsize=lableFontSize)
+        plt.title('Values of the objective function (least-squares)', fontsize=20)
+        plt.xticks(fontsize=14)
+        plt.yticks(fontsize=14)
+        
+        mng = plt.get_current_fig_manager()
+        mng.full_screen_toggle()
+        plt.savefig('contour1.png', dpi=300)
+        
+        #plt.show()
 
     return [np.array([n_opt, D_opt, q_opt, Lambda_opt]), min]
 

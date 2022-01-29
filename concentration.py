@@ -6,6 +6,7 @@ import parameters as par
 
 filePath = './optimals.csv'
 
+# Reads the optimal parameter sets from a csv file and returns them as a matrix.
 def readOptimalValues(filePath):
     
     # 3 methods, 4 parameters, 3 objective functions
@@ -28,32 +29,11 @@ def readOptimalValues(filePath):
 
     return optimalValues
 
-#fig, axes = plt.subplots(nrows=1, ncols=3)
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(8.0*1.5, 5.0*1.5))
+fig.suptitle('Prediction of the Concentration at 100 m', fontsize=20)
+subplotPositions = [[0,0],[0,1],[1,0]]
 
 optimalValues = readOptimalValues(filePath)
-
-# Get minimum and maximum of the parameter values
-maxValues = np.maximum(np.maximum(optimalValues[0],optimalValues[1]), optimalValues[2])
-minValues = np.minimum(np.minimum(optimalValues[0],optimalValues[1]), optimalValues[2])
-maxN = maxValues[0].max()
-minN = minValues[0].min()
-
-maxD = maxValues[1].max()
-minD = minValues[1].min()
-
-maxQ = maxValues[2].max()
-minQ = minValues[2].min()
-
-maxLambda = maxValues[3].max()
-minLambda = minValues[3].min()
-
-print('\nParameter range:')
-print('n: [' + str(minN) + ', ' + str(maxN) + ']; Difference: ' + str(maxN - minN))
-print('D: [' + str(minD) + ', ' + str(maxD) + ']; Difference: ' + str(maxD - minD))
-print('q: [' + str(minQ) + ', ' + str(maxQ) + ']; Difference: ' + str(maxQ - minQ))
-print('Lambda: [' + str(minLambda) + ', ' + str(maxLambda) + ']; Difference: ' + str(maxLambda - minLambda))
-
-
 
 time = np.arange(1,101)
 
@@ -64,9 +44,10 @@ methods = ['Grid Search', 'Monte Carlo', 'Nelder-Mead']
 for j in range(3):
     
     # Prepare figure
-    plt.figure(j+1)
-    ax = plt.gca()
-    ax.set_title('Prediction of the concentration at 100 m\nobjective function: ' + obj[j])
+    #plt.figure(j+1)
+    #ax = plt.gca()
+    ax = axes[subplotPositions[j][0], subplotPositions[j][1]]
+    ax.set_title(obj[j])
     ax.set_ylabel('concentration $[kg/m^3]$')
     ax.set_xlabel('days')
 
@@ -89,9 +70,14 @@ for j in range(3):
     ax.text(0.02, 0.97, textString, transform=ax.transAxes, fontsize=10,
         verticalalignment='top', bbox=props)
     
-    ax.legend()
-
+    ax.legend(loc='upper right')
+axes[1,1].axis('off')
 plt.tight_layout()
-plt.show()
+
+mng = plt.get_current_fig_manager()
+mng.full_screen_toggle()
+plt.savefig('concentration.png', dpi=300)
+
+#plt.show()
 
 
