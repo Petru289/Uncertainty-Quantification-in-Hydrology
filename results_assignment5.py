@@ -5,15 +5,17 @@ from scipy.optimize import fsolve
 from functions import c
 from dream_results_5 import dream_results_5
 from assignment5_P import choose
+import matplotlib.pyplot as plt
 
 
 
-# Uncomment this if you want to run the process one more time. It takes abouOtherwise, just read the output from the files below.
+# Uncomment these 3 lines if you want to run the process one more time. It takes about 90 minutes on my PC. 
+# Otherwise, just read the output from the files.
 # choose('close')
-# choose('half way')
+# choose('halfway')
 # choose('far')
 
-# Close, half way and far relative to the position of the drinking well
+# Close, halfway and far relative to the position of the drinking well
 
 stds_close = np.loadtxt("stds_close.txt", dtype='f', delimiter=' ') #pos here is about 88 m
 stds_halfway = np.loadtxt("stds_halfway.txt", dtype='f', delimiter=' ') #pos here is about 67 m
@@ -54,7 +56,7 @@ def visualisation(position):
 
     if position == 'close':
         pos = position_close
-    if position == 'half way':
+    if position == 'halfway':
         pos = position_halfway
     if position == 'far':
         pos = position_far
@@ -63,4 +65,16 @@ def visualisation(position):
     new_meas = [pos, obstimes, obs]
     dream_results_5(new_meas, plot = True)
 
-visualisation('close') #choose position
+visualisation('far') #choose position: 'close', 'halfway' or 'far'
+
+labels = ['n', 'D', 'q', 'Lambda']
+l = np.arange(len(labels))
+            
+width = 0.2
+plt.bar(l - width, meanstds_close, width, label = 'Close')
+plt.bar(l, meanstds_halfway, width, label = 'Halfway')
+plt.bar(l + width, meanstds_far, width, label = 'Far')
+plt.title('Standard deviations of parameters depending on the position of the new monitoring well relative to the drinking well')
+plt.xticks(l, labels = labels)
+plt.legend()
+plt.show()
