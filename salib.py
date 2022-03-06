@@ -48,7 +48,10 @@ for xIndex, x in enumerate(par.x):
         axes[xIndex, tIndex].set_title('x = {}, t = {}'.format(x, t), fontsize = 12)
         sns.heatmap(np.around(Si['S2'], 4), ax=axes[xIndex,tIndex], linewidth=0.5, cmap="YlGnBu", xticklabels=['n','D','q','$\lambda$'], yticklabels=['n','D','q','$\lambda$'], annot=True, linewidths=2, linecolor='black', vmin=0, vmax=0.5)
 
+# This migth not work on windows because it uses a different figure manager
 mng = plt.get_current_fig_manager()
 mng.full_screen_toggle()
 plt.savefig('salib.png', dpi=300)
+
+
 #plt.show()

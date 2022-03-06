@@ -10,7 +10,7 @@ def choose(position):
 
     results = spotpy.analyser.load_csv_results('HydrologyDREAM')
     param_all = results[['parn', 'parD', 'parq', 'parLambda']]
-    param = param_all[-100:]
+    param = param_all[-1000:]
     param = np.column_stack((param['parn'], param['parD'], param['parq'], param['parLambda']))
 
 
@@ -40,7 +40,129 @@ def choose(position):
     limittimes = np.zeros(param.shape[0])
     positions = np.zeros(param.shape[0])
 
+    #x where contaminant is detectable at day 36, i.e. earliest you can measure something -- gives farthest point (i.e. closest to the drinking well)
+    #we can do measurements in the allowed time interval only before the center of mass passed the sampling point
+    if position == 'close':
 
+        for i in range(param.shape[0]):
+            tcrit = np.floor(getTfromConcentration(2.5, 100, 200, param[i,0], param[i,1], param[i,2], param[i,3])[0])
+            tdet = tcrit - 10
+            x_s = getXfromConcentration(10 ** (-5), 36, 200, param[i,0], param[i,1], param[i,2], param[i,3])
+            limittimes[i] = tdet
+            positions[i] = x_s[1]
+        
+        tdet = np.floor(np.mean(limittimes))
+        pos = np.floor(np.mean(positions))
+        pos = 88
+        #Divide the interval to obtain 5 points in total
+        h = (tdet - 36) / 4
+        obstimes = np.array([36, np.floor(36 + h), np.floor(36 + 2*h), np.floor(36 + 3*h), tdet])
+
+        n, D, q, Lambda = np.mean(param[:,0]), np.mean(param[:,1]), np.mean(param[:,2]), np.mean(param[:,3])
+        obs = c(pos, obstimes, 200, n, D, q, Lambda)
+        new_meas = [pos, obstimes, obs]
+        new_param = dream_results_5(new_meas)
+        #means[i,:] = np.array([np.mean(new_param[:,j]) for j in range(means.shape[1])])
+        #stds = np.array([np.std(new_param[:,0]), np.std(new_param[:,1]), np.std(new_param[:,2]), np.std(new_param[:,3])])
+
+        # mat = np.matrix(stds)
+        # with open('stds_close.txt','wb') as f:
+        #     line = mat[0]
+        #     np.savetxt(f, line, fmt='%.2f')
+        # mat = np.matrix(pos)
+        # with open('position_close.txt','wb') as f:
+        #     line = mat[0]
+        #     np.savetxt(f, line, fmt='%.2f')
+        
+        return(new_param, pos)
+
+    #x where contaminant is 0.5 at day 36. We want the maximum to be attained at the half time between 36 and tcrit - 10,
+    #so that we can do measurements in that time interval before and after the center of mass passed the sampling point
+    #we can figure out from previous simulations that this approximately happens when contaminant is about 0.5 at day 36
+    if position == 'halfway':
+
+        for i in range(param.shape[0]):
+            tcrit = np.floor(getTfromConcentration(2.5, 100, 200, param[i,0], param[i,1], param[i,2], param[i,3])[0])
+            tdet = tcrit - 10
+            x_s = getXfromConcentration(0.5, 36, 200, param[i,0], param[i,1], param[i,2], param[i,3])
+            limittimes[i] = tdet
+            positions[i] = x_s[1]
+
+        tdet = np.floor(np.mean(limittimes))
+        pos = np.floor(np.mean(positions))
+        pos = 67
+        #Divide the interval to obtain 5 points in total
+        h = (tdet - 36) / 4
+        obstimes = np.array([36, np.floor(36 + h), np.floor(36 + 2*h), np.floor(36 + 3*h), tdet])
+
+        n, D, q, Lambda = np.mean(param[:,0]), np.mean(param[:,1]), np.mean(param[:,2]), np.mean(param[:,3])
+        obs = c(pos, obstimes, 200, n, D, q, Lambda)
+        new_meas = [pos, obstimes, obs]
+        new_param = dream_results_5(new_meas)
+        #means[i,:] = np.array([np.mean(new_param[:,j]) for j in range(means.shape[1])])
+        #stds = np.array([np.std(new_param[:,0]), np.std(new_param[:,1]), np.std(new_param[:,2]), np.std(new_param[:,3])])
+
+        # mat = np.matrix(stds)
+        # with open('stds_halfway.txt','wb') as f:
+        #     for line in mat:
+        #         np.savetxt(f, line, fmt='%.2f')
+        
+        # mat = np.matrix(means)
+        # with open('means_halfway.txt','wb') as f:
+        #     for line in mat:
+        #         np.savetxt(f, line, fmt='%.2f')
+
+        # with open('position_halfway.txt','wb') as f:
+        #     np.savetxt(f, pos, fmt='%.2f')
+
+        
+        return(new_param, pos)
+
+
+#x where contaminant is 0.1 at day tcrit - 10. We want the maximum to be attained at approximately day 36,
+#so that we can do measurements only after the center of mass passed the sampling point
+#we can figure out from previous simulations that this approximately happens when contaminant is about 0.1 at day tcrit - 10
+    if position == 'far':
+
+        for i in range(param.shape[0]):
+            tcrit = np.floor(getTfromConcentration(2.5, 100, 200, param[i,0], param[i,1], param[i,2], param[i,3])[0])
+            tdet = tcrit - 10
+            x_s = getXfromConcentration(0.1, tdet, 200, param[i,0], param[i,1], param[i,2], param[i,3])
+
+            limittimes[i] = tdet
+            positions[i] = x_s[0]
+
+        tdet = np.floor(np.mean(limittimes))
+        pos = np.floor(np.mean(positions))
+        pos = 57 #For steady results
+        #Divide the interval to obtain 5 points in total
+        h = (tdet - 36) / 4
+        obstimes = np.array([36, np.floor(36 + h), np.floor(36 + 2*h), np.floor(36 + 3*h), tdet])
+        # means = np.zeros(param.shape)
+        # stds = np.zeros(param.shape)
+
+        n, D, q, Lambda = np.mean(param[:,0]), np.mean(param[:,1]), np.mean(param[:,2]), np.mean(param[:,3])
+        obs = c(pos, obstimes, 200, n, D, q, Lambda)
+        new_meas = [pos, obstimes, obs]
+        new_param = dream_results_5(new_meas)
+
+        # mat = np.matrix(stds)
+        # with open('stds_far.txt','wb') as f:
+        #     for line in mat:
+        #         np.savetxt(f, line, fmt='%.2f')
+        
+        # mat = np.matrix(means)
+        # with open('means_far.txt','wb') as f:
+        #     for line in mat:
+        #         np.savetxt(f, line, fmt='%.2f')
+
+        # with open('position_far.txt','wb') as f:
+        #     np.savetxt(f, pos, fmt='%.2f')
+
+        return(param, pos)
+
+    
+    '''
 
     #x where contaminant is detectable at day 36, i.e. earliest you can measure something -- gives farthest point (i.e. closest to the drinking well)
     #we can do measurements in the allowed time interval only before the center of mass passed the sampling point
@@ -66,7 +188,7 @@ def choose(position):
             obs = c(pos, obstimes, 200, n, D, q, Lambda)
             new_meas = [pos, obstimes, obs]
             new_param = dream_results_5(new_meas)
-            means[i,:] = np.array([np.mean(new_param[:,j]) for j in range(means.shape[1])])
+            #means[i,:] = np.array([np.mean(new_param[:,j]) for j in range(means.shape[1])])
             stds[i,:] = np.array([np.std(new_param[:,j]) for j in range(stds.shape[1])])
         
         mat = np.matrix(stds)
@@ -85,7 +207,7 @@ def choose(position):
     #x where contaminant is 0.5 at day 36. We want the maximum to be attained at the half time between 36 and tcrit - 10,
     #so that we can do measurements in that time interval before and after the center of mass passed the sampling point
     #we can figure out from previous simulations that this approximately happens when contaminant is about 0.5 at day 36
-    if position == 'half way':
+    if position == 'halfway':
 
         for i in range(param.shape[0]):
             tcrit = np.floor(getTfromConcentration(2.5, 100, 200, param[i,0], param[i,1], param[i,2], param[i,3])[0])
@@ -165,9 +287,7 @@ def choose(position):
         with open('position_far.txt','wb') as f:
             np.savetxt(f, pos, fmt='%.2f')
 
-   
-
-print(2)
+   '''
 
 
 # for i in range(param.shape[0]):

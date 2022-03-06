@@ -11,7 +11,6 @@ from functions import c
 def dream_results_5(new_meas, plot = False):
 
     spot_setup = spotpy_setup(new_meas)
-
     time = [5, 10, 15, 20, 25, 30, 35]
 
     r_hat = dream_run_5(new_meas)
@@ -19,7 +18,7 @@ def dream_results_5(new_meas, plot = False):
 
 
     param_all = results[['parn', 'parD', 'parq', 'parLambda']]
-    param = param_all[-100:] # Only the last 100 iterations of the chain
+    param = param_all[-1000:] # Only the last 1000 iterations of the chain
     param = np.column_stack((param['parn'], param['parD'], param['parq'], param['parLambda']))
     
     if plot == True:
@@ -70,13 +69,13 @@ def dream_results_5(new_meas, plot = False):
             else:
                 axes[i].plot(obsindices3, spot_setup.evaluation()[len(obsindices1) + len(obsindices2):len(obsindices1) + len(obsindices2) + len(obsindices3)], 'r.', label='observations')
                 axes[i].set_ylim(-0.3,15)
-                axes[i].set_ylabel('C(, . ) [kg/m^3]')
+                axes[i].set_ylabel('C( %.0f, . ) [kg/m^3]' %new_well)
             
             axes[i].set_xlabel('time [days]') 
             if i == 0 or i == 1:
                 axes[i].set_xticklabels(labels = ['5'] + time) # I know this is weird, but otherwise it doesn't put the first tick, Idk why
             else:
-                axes[i].set_xticklabels(labels = new_times) #Labels to fix here
+                axes[i].set_xticklabels(labels = ['36'] + new_times.tolist())
             axes[i].set_xlim(-0.05,6.05)   
             axes[i].legend()
             fig.savefig('python_hydrology_5.png', dpi = 300)                   
