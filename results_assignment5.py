@@ -39,6 +39,7 @@ def chooseposition(position, visualisation = False):
         param_all = results[['parn', 'parD', 'parq', 'parLambda']]
         param = param_all[-100:]
         param = np.column_stack((param['parn'], param['parD'], param['parq'], param['parLambda']))
+        # Maybe take the mean?
         n, D, q, Lambda = param[15,0], param[15,1], param[15,2], param[15,3] #we should randomize this, but for the moment consider 15 random:)
         tcrit = np.floor(getTfromConcentration(2.5, 100, 200, n, D, q, Lambda)[0])
         tdet = tcrit - 10
