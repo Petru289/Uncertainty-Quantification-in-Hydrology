@@ -1,10 +1,11 @@
+from webbrowser import get
 import numpy as np
 import spotpy
 from dream_setup import spotpy_setup
 from dream_run import dream_run
 import matplotlib.pyplot as plt
 from spotpy.analyser import plot_parameter_trace
-from spotpy.analyser import plot_posterior_parameter_histogram
+from spotpy.analyser import plot_posterior_parameter_histogram, get_posterior
 from functions import c
 
 # Set pickobs to be one of the following:
@@ -71,22 +72,35 @@ for i in range(2):
         axes[i].set_ylabel('C(50, . ) [kg/m^3]')
 
     axes[i].set_xlabel('time [days]') 
-    axes[i].set_xticklabels(labels = ['5'] + time) # I know this is weird, but otherwise it doesn't put the first tick, Idk why
+    axes[i].set_xticklabels(labels = ['0'] + time) # I know this is weird, but otherwise it doesn't put the first tick, Idk why
     axes[i].set_xlim(-0.05,6.05)   
     axes[i].legend()
-    fig.savefig('python_hydrology.png', dpi = 300)                   
+
+plt.suptitle('Uncertainty in Concentration Estimation', fontsize=18)
+fig.savefig('python_hydrology.png', dpi = 300)                   
                                 
 
 spotpy.analyser.plot_gelman_rubin(results, r_hat, fig_name='python_hydrology_convergence.png')
+plt.suptitle('Convergence diagnostic', fontsize=18)
 parameters = spotpy.parameter.get_parameters_array(spot_setup)
 
-fig, ax = plt.subplots(nrows=4, ncols=2)
-for par_id in range(len(parameters)):
-    plot_parameter_trace(ax[par_id][0], results, parameters[par_id])
-    plot_posterior_parameter_histogram(ax[par_id][1], results, parameters[par_id])
+fig, axes = plt.subplots(nrows=4, ncols=2)
 
-ax[-1][0].set_xlabel('Iterations')
-ax[-1][1].set_xlabel('Parameter range')
+# Calculate posterior statistics
+print('n: ' + str(round(np.mean(param[:,0]), 6)) + '   ' + str(round(np.var(param[:,0]), 6)))
+print('D: ' + str(round(np.mean(param[:,1]), 6)) + '   ' + str(round(np.var(param[:,1]), 6)))
+print('q: ' + str(round(np.mean(param[:,2]), 6)) + '   ' + str(round(np.var(param[:,2]), 6)))
+print('l: ' + str(round(np.mean(param[:,3]), 6)) + '   ' + str(round(np.var(param[:,3]), 6)))
+
+
+for par_id in range(len(parameters)):
+    plot_parameter_trace(axes[par_id][0], results, parameters[par_id])
+    plot_posterior_parameter_histogram(axes[par_id][1], results, parameters[par_id])
+
+axes[-1][0].set_xlabel('Iterations')
+axes[-1][1].set_xlabel('Parameter range')
+
+plt.suptitle('Parameter Uncertainty', fontsize=18)
 
 plt.show()
 fig.savefig('hydrology_parameters.png',dpi=300)

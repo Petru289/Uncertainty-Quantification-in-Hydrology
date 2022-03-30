@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import scipy.optimize
 
 # Read the results from Assignment 4
-results = spotpy.analyser.load_csv_results('HydrologyDREAM')
+results = spotpy.analyser.load_csv_results('HydrologyDREAMcopy')
 param_all = results[['parn', 'parD', 'parq', 'parLambda']]
 #param = param_all[-10:]
 param = param_all[-1:]
@@ -47,6 +47,7 @@ for paramSet in param:
     # Get the time we reach the critical concentration at the well
     tCrit = getTfromConcentration(cThreshold, 100, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 64)
 
+    # Plot breakthrough curve
     fig, axes = plt.subplots(2,2)
     timeSteps = np.linspace(1,100,100)
     axes[0,0].plot(timeSteps, c(100, timeSteps, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]), 'c')
@@ -57,6 +58,7 @@ for paramSet in param:
     axes[0,0].set_title('Concentration over time at x = 100m')
     
 
+    # Plot c at tcrit
     xSteps = np.linspace(80,120,100)
     axes[0,1].plot(xSteps, c(xSteps, tCrit, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]), 'c')
     axes[0,1].axvline(x=100, color='r')
@@ -66,6 +68,7 @@ for paramSet in param:
     axes[0,1].set_title('Concentration over x at time = tCrit')
 
 
+    # Plot c at tcrit - 10
     x = np.linspace(40,150,100)
     axes[1,0].plot(x, c(x, tCrit - 10, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]), 'm')
     axes[1,0].plot(x, c(x, tCrit, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]), 'c')
@@ -79,23 +82,40 @@ for paramSet in param:
     xDetection = [0,0]
     xDetection[0] = getX2(tDetectionStart, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 120, cDectTrheshold)
     xDetection[1] = getX2(tDetectionStart, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 40, cDectTrheshold)
-    xThresholdLower = getX2(tDetectionStart, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 70, cThreshold)
-    xThresholdUpper = getX2(tDetectionStart, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 85, cThreshold)
+    
+    # Different thresholds
+    xThresholdLower = getX2(tDetectionStart, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 63, 0.5)
+    xThresholdUpper = getX2(tDetectionStart, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 95, 0.5)
     print([xThresholdLower, xThresholdUpper])
     axes[1,0].axvline(x=xDetection[0], color='k')
     axes[1,0].axvline(x=xDetection[1], color='k')
-    axes[1,0].axvline(x=xThresholdLower, color='r')
 
-    timeSteps = np.linspace(tCrit - 30, tCrit, 100)
-    axes[1,1].plot(timeSteps, c(xThresholdLower, timeSteps, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]))
-    axes[1,1].axvline(x=tCrit - 10, color='r')
-    axes[1,1].text((tCrit - 10) + 0.5, 0.1, 'tCrit - 10', rotation=90)
-    axes[1,1].set_xlabel('Days')
+
+    axes[1,1].plot(x, c(x, tCrit - 10, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]), 'm')
+    axes[1,1].set_xlabel('[m]')
     axes[1,1].set_ylabel('C')
+    axes[1,1].set_title('Concentration over x at time = tCrit - 10')
+    axes[1,1].axvline(x=xThresholdLower, color='r')
+    axes[1,1].axhline(y=0.5, color='r')
 
-    timeFirstSample = getTfromConcentration(cThreshold, xThresholdLower, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 43)
+    fig.tight_layout()
+    plt.show()
+
+    # Plot sample points
+    fig, ax = plt.subplots(1,1)
+
+    timeSteps = np.linspace(tCrit - 40, tCrit, 100)
+    ax.plot(timeSteps, c(xThresholdLower, timeSteps, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]))
+    ax.axvline(x=tCrit - 10, color='r')
+    ax.text((tCrit - 10) + 0.5, 0.1, 'tCrit - 10', rotation=90)
+    ax.set_xlabel('Days')
+    ax.set_ylabel('C')
+    ax.set_title('Breakthrough curve at sample position')
+
+    timeFirstSample = getTfromConcentration(0.5, xThresholdLower, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3], 30)
+    print(timeFirstSample)
     sampleTimePoints = np.linspace(timeFirstSample, tCrit - 10, 5)
-    axes[1,1].plot(sampleTimePoints, c(xThresholdLower, sampleTimePoints, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]), 'ko')
+    ax.plot(sampleTimePoints, c(xThresholdLower, sampleTimePoints, 200, paramSet[0],paramSet[1],paramSet[2],paramSet[3]), 'ko')
 
     fig.tight_layout()
     plt.show()
