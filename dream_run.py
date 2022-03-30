@@ -19,14 +19,15 @@ def dream_run(obsindices):
     spot_setup = spotpy_setup(obsindices)
 
     #See spotpy.dream.py
-    rep = 6000
+    rep = 8000
     nChains = 5 #default is 5
     convergence_limit = 1.2 #default is 1.2
 
     nCr = 3 #default is 3
-    runs_after_convergence = 100 #default is 100
+    runs_after_convergence = 6000 #default is 100
 
     sampler = spotpy.algorithms.dream(spot_setup, parallel=parallel, dbname='HydrologyDREAM', dbformat=dbformat, db_precision = np.float16, save_sim = True, sim_timeout=timeout)
+    #For experiment in ass. 5, change dbname with 'HydrologyDREAM_late_timepoints'
     r_hat = sampler.sample(repetitions = rep,  nChains = nChains, convergence_limit = convergence_limit, runs_after_convergence = runs_after_convergence)
     
 

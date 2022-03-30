@@ -11,8 +11,8 @@ def dream_run_5(new_meas):
     timeout = 10 #Given in Seconds
 
     #see spotpy._algorithm.py for comment on this
-    random_state = 2
-    np.random.seed(random_state)
+    #random_state = 10
+    #np.random.seed(random_state)
 
     parallel = "seq" #sequential
     dbformat = "csv"
@@ -24,7 +24,7 @@ def dream_run_5(new_meas):
     convergence_limit = 1.2 #default is 1.2
 
     nCr = 3 #default is 3
-    runs_after_convergence = 20000 #default is 100
+    runs_after_convergence = 5000 #default is 100
 
     sampler = spotpy.algorithms.dream(spot_setup, parallel=parallel, dbname='HydrologyDREAM_5', dbformat=dbformat, db_precision = np.float16, save_sim = True, sim_timeout=timeout)
     r_hat = sampler.sample(repetitions = rep,  nChains = nChains, convergence_limit = convergence_limit, runs_after_convergence = runs_after_convergence)

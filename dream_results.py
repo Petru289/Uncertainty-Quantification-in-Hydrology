@@ -18,12 +18,14 @@ pickobs = 'all'
 if pickobs == 'all':
     obsindices = np.arange(0, 14, 1)
 if pickobs == 'half random':
+    np.random.seed(42)
     obsindices = np.sort(np.random.choice(13, size = 7, replace = False))
 if pickobs == 'lower half':
     obsindices = np.array([3, 4, 5, 7, 8, 9, 10])
 if pickobs == 'upper half':
     obsindices = np.array([0, 1, 2, 10, 11, 12, 13])
 
+#obsindices = np.array([0,1,2,3,4,5,6])
 obsindices1 = obsindices[obsindices <= 6]
 obsindices2 = obsindices[obsindices > 6]
 
@@ -32,13 +34,12 @@ spot_setup = spotpy_setup(obsindices)
 
 
 time = [5, 10, 15, 20, 25, 30, 35]
-
 r_hat = dream_run(obsindices)
-results = spotpy.analyser.load_csv_results('HydrologyDREAM')
+results = spotpy.analyser.load_csv_results('HydrologyDREAM') #Change this to 'HydrologyDREAM_late_timepoints' for experiment in assginment 5
 
 
 param_all = results[['parn', 'parD', 'parq', 'parLambda']]
-param = param_all[-100:] # Only the last 100 iterations of the chain
+param = param_all[-1000:] # Only the last 100 iterations of the chain
 param = np.column_stack((param['parn'], param['parD'], param['parq'], param['parLambda']))
 sim1 = []
 sim2 = []
@@ -58,7 +59,7 @@ for i in range(2):
     axes[i].plot(q95,color='dimgrey',linestyle='solid')
     axes[i].fill_between(np.arange(0,len(q5),1),q5,q95,facecolor='dimgrey',zorder=0,
                     linewidth=0,label='parameter uncertainty')
-    
+
     if i == 0:
         axes[i].plot(obsindices1, spot_setup.evaluation()[:len(obsindices1)], 'r.', label='observations')
         axes[i].set_ylim(-0.3,40)
@@ -68,7 +69,7 @@ for i in range(2):
         axes[i].plot(obsindices2 - 7, spot_setup.evaluation()[len(obsindices1):], 'r.', label='observations')
         axes[i].set_ylim(-0.3,15)
         axes[i].set_ylabel('C(50, . ) [kg/m^3]')
-    
+
     axes[i].set_xlabel('time [days]') 
     axes[i].set_xticklabels(labels = ['5'] + time) # I know this is weird, but otherwise it doesn't put the first tick, Idk why
     axes[i].set_xlim(-0.05,6.05)   
@@ -90,6 +91,23 @@ ax[-1][1].set_xlabel('Parameter range')
 plt.show()
 fig.savefig('hydrology_parameters.png',dpi=300)
 
+
+print("Means:")
+print(" ")
+print(np.mean(param[:,0]), np.mean(param[:,1]), np.mean(param[:,2]), np.mean(param[:,3]))
+print(" ")
+print("Stds:")
+print(" ")
+print(np.std(param[:,0]), np.std(param[:,1]), np.std(param[:,2]), np.std(param[:,3]))
+
+
+
+# M, d, k = 4, 2, 4 #https://spotpy.readthedocs.io/en/latest/Sensitivity_analysis_with_FAST/
+# rep = (1 + 4 * M ** 2 * (1 + (k - 2) * d)) * k
+# sampler = spotpy.algorithms.fast(spot_setup,  dbname='FAST_hydrology',  dbformat='csv')
+# sampler.sample(repetitions = rep)
+# results_FAST = spotpy.analyser.load_csv_results('FAST_hydrology')
+# spotpy.analyser.plot_fast_sensitivity(results_FAST, number_of_sensitiv_pars=4)
 
 
 
@@ -115,7 +133,7 @@ fig.savefig('hydrology_parameters.png',dpi=300)
 
 
 #M, d, k = 4, 2, 4 #https://spotpy.readthedocs.io/en/latest/Sensitivity_analysis_with_FAST/
-#rep = (1 + 4 * M ** 2 * (1 + (k - 2) *f d)) * k
+#rep = (1 + 4 * M ** 2 * (1 + (k - 2) * d)) * k
 #sampler = spotpy.algorithms.fast(spot_setup,  dbname='FAST_hydrology',  dbformat='csv')
 #sampler.sample(repetitions = rep)
 #results_FAST = spotpy.analyser.load_csv_results('FAST_hydrology')

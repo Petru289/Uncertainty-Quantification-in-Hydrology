@@ -31,7 +31,7 @@ def getX2(t, M, n, D, q ,Lambda, xEstimate, cThreshold):
 def getXfromConcentration(c, t, M, n, D, q ,Lambda):
     A = M / (np.sqrt(4 * np.pi * D * t))
     #x1 = (q*t)/n + sqrt(4*D*t * (np.log((c * sqrt(4*np.pi*D*t))/M) + Lambda * t))
-    x1 = q * t / n + np.sqrt(-(np.log(c/A) + Lambda*t)/(4*D*t))
+    x1 = q * t / n + np.sqrt(-(np.log(c/A) + Lambda*t)/(4*D*t)) #Typo here: it should be *4*D*t
     x2 = q * t / n - np.sqrt(-(np.log(c/A) + Lambda*t)/(4*D*t))
     return [x2[0], x1[0]]
 
