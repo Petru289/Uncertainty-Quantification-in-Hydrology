@@ -2,9 +2,11 @@ import numpy as np
 import chaospy as cp
 from numpy.core.fromnumeric import size
 import matplotlib.pyplot as plt
-from functions import c
+import sys
+sys.path.append("..")
+from Assignment1 import functions
 
-import parameters as par
+from Assignment1 import parameters
 
 
 x = par.x
