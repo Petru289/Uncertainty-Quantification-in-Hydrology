@@ -1,3 +1,6 @@
+#Saltelli algorithm for computing firs and total order sensitivity indices
+
+
 import numpy as np
 import chaospy as cp
 from numpy.core.fromnumeric import size
