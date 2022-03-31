@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+import sys
+sys.path.insert(0, './Assignment1')
 from functions import c
 import parameters as par
 

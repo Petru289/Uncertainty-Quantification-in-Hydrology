@@ -6,6 +6,8 @@ from dream_run import dream_run
 import matplotlib.pyplot as plt
 from spotpy.analyser import plot_parameter_trace
 from spotpy.analyser import plot_posterior_parameter_histogram, get_posterior
+import sys
+sys.path.insert(0, './Assignment1')
 from functions import c
 
 # Set pickobs to be one of the following:

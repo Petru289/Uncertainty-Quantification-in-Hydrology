@@ -1,12 +1,14 @@
 import numpy as np
 import pandas as pd
+import sys
+sys.path.insert(0, './Assignment1')
 import parameters as par
 from functions import c
 
 # Different objective functions for the calibration process
 
 t = np.array([5, 10, 15, 20, 25, 30, 35])
-file = pd.read_excel('./measurements.xlsx')
+file = pd.read_excel('./Assignment3/measurements.xlsx')
 obs = file.to_numpy()
 
 # Objective function definition

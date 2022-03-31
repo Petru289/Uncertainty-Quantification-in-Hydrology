@@ -5,6 +5,8 @@ from dream_run_5 import dream_run_5
 import matplotlib.pyplot as plt
 from spotpy.analyser import plot_parameter_trace
 from spotpy.analyser import plot_posterior_parameter_histogram
+import sys
+sys.path.insert(0, './Assignment1')
 from functions import c
 
 

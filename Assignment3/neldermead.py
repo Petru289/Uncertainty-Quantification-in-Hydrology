@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import chaospy as cp
 from scipy.optimize import minimize
+import sys
+sys.path.insert(0, './Assignment1')
 from functions import c
 import parameters as par
 import obj

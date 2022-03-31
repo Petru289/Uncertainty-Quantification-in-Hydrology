@@ -1,6 +1,9 @@
 from tkinter import E
 import spotpy 
+import sys
 import numpy as np
+sys.path.insert(0, './Assignment1')
+sys.path.insert(0, './Assignment3')
 import parameters as par
 from functions import c
 import obj
@@ -13,7 +16,6 @@ n_obs = 14
 time = np.array([5, 10, 15, 20, 25, 30, 35])
 time2 = np.array([35, 38, 41, 44, 47, 50, 53])
 space = np.array([5, 50])
-
 
 class spotpy_setup(object):
     def __init__(self, obsindices):

@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import sys
+sys.path.insert(0, './Assignment1')
 import parameters as par
 from functions import c
 import obj

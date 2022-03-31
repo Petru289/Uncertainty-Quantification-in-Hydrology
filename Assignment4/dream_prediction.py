@@ -1,6 +1,8 @@
 import py_compile
 from turtle import color
 import numpy as np
+import sys
+sys.path.insert(0, './Assignment1')
 from functions import c
 import matplotlib.pyplot as plt
 import spotpy.analyser

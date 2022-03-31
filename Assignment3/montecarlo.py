@@ -2,6 +2,8 @@ from matplotlib.colors import LogNorm
 import numpy as np
 import pandas as pd
 import chaospy as cp
+import sys
+sys.path.insert(0, './Assignment1')
 import parameters as par
 from functions import c
 import matplotlib.pyplot as plt

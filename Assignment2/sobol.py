@@ -2,6 +2,8 @@ import numpy as np
 import chaospy as cp
 from numpy.core.fromnumeric import size
 import matplotlib.pyplot as plt
+import sys
+sys.path.insert(0, './Assignment1')
 from functions import c
 import parameters as par
 

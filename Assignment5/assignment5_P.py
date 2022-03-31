@@ -3,6 +3,8 @@ import numpy as np
 from scipy.optimize import fsolve
 import matplotlib.pyplot as plt
 from dream_results_5 import dream_results_5
+import sys
+sys.path.insert(0, './Assignment1')
 from functions import c
 
 

@@ -1,6 +1,9 @@
 from tkinter import E
 import spotpy 
 import numpy as np
+import sys
+sys.path.insert(0, './Assignment1')
+sys.path.insert(0, './Assignment3')
 import parameters as par
 from functions import c
 import obj

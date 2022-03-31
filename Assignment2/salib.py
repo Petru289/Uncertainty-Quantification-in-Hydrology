@@ -4,6 +4,8 @@
 import enum
 from SALib.sample import saltelli
 from SALib.analyze import sobol
+import sys
+sys.path.insert(0, './Assignment1')
 import numpy as np
 import parameters as par
 from functions import c

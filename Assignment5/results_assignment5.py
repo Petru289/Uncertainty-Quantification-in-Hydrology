@@ -2,6 +2,8 @@ from tabnanny import check
 import numpy as np
 import spotpy
 from scipy.optimize import fsolve
+import sys
+sys.path.insert(0, './Assignment1')
 from functions import c
 from dream_results_5 import dream_results_5
 from assignment5_P import choose
